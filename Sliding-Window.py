@@ -29,18 +29,18 @@ def main():
 	#Load the images and create a sliding window for Positive negative classification
 	
 	#Steps for the sliding window
-	w = 16
+	w = 10
 	y = 0
 	x = 0
-	step = 8
+	step = 6
 	root = os.path.abspath('.')
 	#Y = vote yes, N = vote no
 	
 	#open image and extract row and column counts
-	image = cv2.imread('bf_test.tif', 0)
-	image = cv2.resize(image, (0,0), fx = 0.2, fy = 0.2)
+	image = cv2.imread('images/droplet_bf.tif', 0)
+	#image = cv2.resize(image, (0,0), fx = 0.2, fy = 0.2)
 	(row, column) = image.shape
-	trainingDim = (30, 30)
+	trainingDim = (20, 20)
 	
 	#create the positive and negative folders
 	positiveFolder = os.path.join(root, 'positiveSet')
@@ -100,7 +100,7 @@ def main():
 			if not outBounds:
 			
 				#resize as larger so that I can actually see it
-				tempCrop = cv2.resize(crop, (400, 400))
+				tempCrop = cv2.resize(crop, (200, 200))
 				cv2.imshow('crop', tempCrop)
 				input = cv2.waitKey()
 

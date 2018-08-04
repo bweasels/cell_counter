@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% File: mlalgo.m
+% File: cell_counter.m
 % Purpose: Find Droplets in an image
 % Notes: This is my first time!!!!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -28,7 +28,7 @@ cvSet = cvSet(:, 2:end);
 Y_test = testSet(:, 1);
 testSet = testSet(:, 2:end);
 
-initial_theta = zeros(size(trainingSet, 2), 1);
+initial_theta = zedros(size(trainingSet, 2), 1);
 iterations = [500, 600, 700, 800, 1000];
 lambdas = 1.2;
 for i = 1:length(iterations)
