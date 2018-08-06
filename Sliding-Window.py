@@ -32,7 +32,7 @@ def main():
 	w = 10
 	y = 0
 	x = 0
-	step = 6
+	step = 12
 	root = os.path.abspath('.')
 	#Y = vote yes, N = vote no
 	
@@ -40,7 +40,7 @@ def main():
 	image = cv2.imread('images/droplet_bf.tif', 0)
 	#image = cv2.resize(image, (0,0), fx = 0.2, fy = 0.2)
 	(row, column) = image.shape
-	trainingDim = (20, 20)
+	trainingDim = (30, 30)
 	
 	#create the positive and negative folders
 	positiveFolder = os.path.join(root, 'positiveSet')
@@ -75,9 +75,6 @@ def main():
 	
 	nRows = (row - w)/step
 	nColumns = (column - w)/step
-
-	y = 0
-	x = 0
 
 	#go through the stepped columns and rows
 	for i in range(nColumns):
