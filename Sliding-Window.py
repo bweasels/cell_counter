@@ -7,10 +7,10 @@ def main():
 	#Load the images and create a sliding window for Positive negative classification
 	
 	#Steps for the sliding window
-	w = 15
+	w = 12
 	y = 0
 	x = 0
-	step = 10
+	step = 8
 	root = os.path.abspath('.')
 	
 	image = cv2.imread('images/droplet_bf.tif', 0)
