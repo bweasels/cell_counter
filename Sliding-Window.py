@@ -15,7 +15,7 @@ def main():
 	
 	image = cv2.imread('images/droplet_bf.tif', 0)
 	(row, column) = image.shape
-	trainingDim = (30, 30)
+	#trainingDim = (30, 30)
 	
 	#create the positive and negative folders
 	positiveFolder = os.path.join(root, 'positiveSet')
