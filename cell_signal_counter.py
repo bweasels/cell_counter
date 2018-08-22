@@ -67,9 +67,11 @@ def generate_training_set(bf_img):
 
 			#if not off the screen then send to me for judging as positive or negative
 			if not outBounds:
-			
+				#perCompleted = int(((((i-1)*nRows)+j)/nColumns*nRows)*100)
+				#print perCompleted
 				#resize as larger so that I can actually see it
 				tempCrop = cv2.resize(crop, (300, 300))
+				#imageName = "crop {}% finished".format(perCompleted)
 				cv2.imshow('crop', tempCrop)
 				input = cv2.waitKey()
 

@@ -12,11 +12,11 @@ clear ; close all; clc
 pkg load image;
 
 %Set paths to the positive and negative folders
-posFolder = 'C:/Users/benku/Dropbox/Ben/Mass General Hospital Work/Mark Image Processing/positiveSet';
-negFolder = 'C:/Users/benku/Dropbox/Ben/Mass General Hospital Work/Mark Image Processing/negativeSet';
-imLength = 32;
+posFolder = 'C:/Users/benku/cell_counter/positiveSet';
+negFolder = 'C:/Users/benku/cell_counter/negativeSet';
+imLength = 24;
 
-[trainingSet, cvSet, testSet] = loadTrain(posFolder, negFolder, imLength);
+[trainingSet, cvSet, testSet] = loadTrain(posFolder, negFolder, imLength, 500);
 
 Y = trainingSet(:,1);
 trainingSet = trainingSet(:, 2:end);
@@ -30,6 +30,8 @@ testSet = testSet(:, 2:end);
 initial_theta = zeros(size(trainingSet, 2), 1);
 
 imgSize = size(trainingSet, 2);
+
+
 ##############START NN CODE#####################
 input_layer_size = imgSize;
 hidden_layer_size = imgSize;
