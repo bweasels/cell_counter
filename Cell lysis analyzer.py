@@ -3,6 +3,8 @@ import os
 import gc
 import numpy
 
+CELL_MAX_SIZE = 20
+
 def findDroplets(img, cy5_img):
 	
 	height, width = img.shape
@@ -33,26 +35,28 @@ def findDroplets(img, cy5_img):
 	
 	return(n_droplets, blanked)
 	
-def avgPixelVal(img):
+def dropPixelVal(img):
 	height, width = img.shape
-	avgPixelVal = 0
+	grossPixelVal = 0
 	count = 0
 	
 	##Go through and add up pixel values. If the pixel value is 0 then it has been masked out and can be ignored
 	for h in range(height):
 		for w in range(width):
 			if img[h][w] != 0:
-				avgPixelVal += img[h][w]
-				count += 1
-	avgPixelVal = avgPixelVal/count
-	return(avgPixelVal) 
+				grossPixelVal += img[h][w]
+				count+=1
+	#grossPixelVal = grossPixelVal/count
+	return(grossPixelVal) 
 
-def main():
-
-	#get the image path and load them
-	root = os.path.abspath('.')
-	imgAddr = os.path.join(root, '7deaza_BF.jpg')
-	cy5imgAddr = os.path.join(root, '7deaza_Cy5.jpg')
+def analyzeFolder(filename, root):	
+	###get the image path and load them
+	BFaddr = filename+'_BF.jpg'
+	CY5addr = filename+'_Cy5.jpg'
+	print('Opening files: ' + BFaddr + ', ' + CY5addr)
+	
+	imgAddr = os.path.join(root, BFaddr)
+	cy5imgAddr = os.path.join(root, CY5addr)
 	img = cv2.imread(imgAddr, 0)
 	cy5_img = cv2.imread(cy5imgAddr, 1)
 	
@@ -61,16 +65,40 @@ def main():
 	mask_img = cv2.cvtColor(mask_img, cv2.COLOR_BGR2GRAY)
 	
 	####STEP: GET AVG PIXEL VALUE OF ENCAPSULATED DROPLETS
-	avgPixel = avgPixelVal(mask_img)
+	avgPixel = dropPixelVal(mask_img)
 	avgPixelperDroplet = avgPixel/n_droplets
 	
 	####STEPS: THRESHOLD, AND GRADIENT DETECT TO FIND # OF WHOLE CELLS
-	ret,thresh_img = cv2.threshold(mask_img, 15, 255, cv2.THRESH_BINARY)
+	ret,thresh_img = cv2.threshold(mask_img, 30, 255, cv2.THRESH_BINARY)
 	mask_img = cv2.bitwise_and(mask_img, thresh_img, thresh_img)
-	image, contours, __ = cv2.findContours(mask_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)	
-	n_whole_cells = len(contours)
+	image, contours, __ = cv2.findContours(mask_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 	
+	n_whole_cells = 0
 	
+	for c in range(len(contours)):
+		area = cv2.contourArea(contours[c])
+		#Rounding area for nicer output
+		area = round(area, 2) 
+		#Area multiplied by scale^2 because units are pixels^2
+		#most erroneous areas at this point smaller than 10 px
+		if area < CELL_MAX_SIZE:
+			n_whole_cells+=1
+	return(avgPixelperDroplet, n_whole_cells)
+	
+def main():
+
+	#Create the output file
+	root = os.path.abspath('.')
+	outputFile = os.path.join(root, "output.csv")
+	output = open(outputFile, "w+") #create/open the output folder
+	output.write('Filename,Average Glow Per Droplet,Number of Intact Cells\n')
+
+	####STEP: LOOP THROUGH LIST OF FILES (HAND GENERATED B/C THEY ARE SHORT)
+	files = ['20mMNaOH', 'Clonetech', 'Clonetech2', 'Dropseq', 'Dropseq2', 'GeneluteLPA', 'RTBuffer', 'TritonX']
+	for i in range(len(files)):
+		(avgPixelperDroplet, n_whole_cells) = analyzeFolder(files[i], root)
+		output.write(files[i]+','+str(avgPixelperDroplet)+','+str(n_whole_cells)+'\n')
+	output.close()
 	return()	
 
 if __name__ == "__main__":
