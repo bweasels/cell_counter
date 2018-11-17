@@ -16,9 +16,9 @@ def read_img(addr):
 	image = cv2.imread(addr, 0)
 	
 	#threshold for improved nn performance
-	_, thresh_img =  cv2.threshold(image, 138, 255, cv2.THRESH_BINARY)
+	#_, thresh_img =  cv2.threshold(image, 138, 255, cv2.THRESH_BINARY)
 	
-	return(thresh_img)
+	return(image)
 
 def generate_training_set(bf_img):
 
@@ -77,10 +77,10 @@ def generate_training_set(bf_img):
 
 				#take input y or n and move the image to the positive or negative folder
 				if (input == ord('y')):
-					imFile = os.path.join(positiveFolder, (str(y) + str(x) + '.jpg'))
+					imFile = os.path.join(positiveFolder, (str(y) + '_' + str(x) + '.jpg'))
 					cv2.imwrite(imFile, crop)
 				elif (input == ord('n')):
-					imFile = os.path.join(negativeFolder, (str(y) + str(x) + '.jpg'))
+					imFile = os.path.join(negativeFolder, (str(y) + '_' + str(x) + '.jpg'))
 					cv2.imwrite(imFile, crop)
 				else:
 					print('incorrect entry, image thrown out\n')
